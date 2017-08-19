@@ -1,0 +1,32 @@
+#movies object, #movie object{
+  width:100%;
+}
+
+@media(min-width:960px){
+  #movies .col-md-3 .well{
+    height: 390px;
+  }
+
+  #movies .col-md-3 object{
+    height:240px;
+  }
+}
+
+
+object {
+  position: relative;
+  float: left;
+  display: block;
+  width: 100%;
+  margin-right: 20px;
+  border: 1px solid #eee;
+
+  &::after {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    content: '';  }
+}
