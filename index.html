@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="css/theme.min.css">
     <link rel="stylesheet" href="css/style.css">
   </head>
-  <body>
+  <body onload="createWatchLaterArray()">
     <nav class="navbar navbar-default">
       <div class="container-fluid">
         <div class="navbar-header">
@@ -20,8 +20,9 @@
         </div>
         <div class="collapse navbar-collapse" id="myNavbar">
           <ul class="nav navbar-nav navbar-right">
-            <li class="active"><a href="#">Home</a></li>
-            <li><a href="#">Watch Later</a></li>
+            <li class="active"><a href="index.html">Home</a></li>
+            <li><a href="watch.html">Watch Later</a></li>
+            <li><a href="movie.html">Last Query</a></li>
             <li><a href="#">About Us</a></li>
           </ul>
         </div>
@@ -34,6 +35,8 @@
 	    	<form id="searchForm">
 	    		<input type="text" class="form-control" id="searchText" placeholder="Search Movies...">
 	    	</form>
+        <h3 class="text-center"><span class="label label-default lb-lg">OR</span></h3><br>
+        <button onclick="getRandom()" class="btn btn-warning btn-block">Get Random Movie</button>
 	    </div>
     </div>
 
