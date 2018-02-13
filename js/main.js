@@ -26,7 +26,7 @@ function createWatchLaterArray(){
 
 
 function getMovies(searchText){
-  axios.get('http://www.omdbapi.com/?s='+searchText+'&apikey=c4337100')
+  axios.get('https://www.omdbapi.com/?s='+searchText+'&apikey=c4337100')
     .then((response) => {
       
       let movies = response.data.Search;
@@ -74,7 +74,7 @@ function movieSelected(id){
 function getMovie(){
   let movieId = sessionStorage.getItem('movieId');
 
-  axios.get('http://www.omdbapi.com/?i='+movieId+'&apikey=c4337100')
+  axios.get('https://www.omdbapi.com/?i='+movieId+'&apikey=c4337100')
     .then((response) => {
       //console.log(response)
       let movie = response.data;
@@ -162,7 +162,7 @@ function getWatchLater(){
 function getRandom(){
   let rand = Math.floor((Math.random() * 1000000) + 1);
 
-  axios.get('http://www.omdbapi.com/?i='+'tt0045751&apikey=c4337100')
+  axios.get('https://www.omdbapi.com/?i='+'tt0045751&apikey=c4337100')
     .then((response) => {
       //console.log(response)
       let movie = response.data;
@@ -212,7 +212,7 @@ function getRandom(){
 }
 
 function getMovieData(imdbID, fn){
-    axios.get('http://www.omdbapi.com/?i='+imdbID+'&apikey=c4337100')
+    axios.get('https://www.omdbapi.com/?i='+imdbID+'&apikey=c4337100')
     .then((response) => {
       let movie = response.data;
       fn(movie);
