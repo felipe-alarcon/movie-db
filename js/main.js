@@ -1,15 +1,3 @@
-/*
-Features to add:
-  
-  random movie button
-  add a watch later feature with comment feature saved into localstorage
-
-  https://api.themoviedb.org/3/movie/550?api_key=9d680017ac8785fd1d4bb9862ebf6863
-  For Tmdb --
-  https://api.themoviedb.org/3/movie/tt0167260?api_key=9d680017ac8785fd1d4bb9862ebf6863
-  With IMDB ID
-
-*/
 
 /**
  * ONLOAD FUNCTION
@@ -57,6 +45,7 @@ function getMovies(searchText){
               </div>`;
             
             $('#movies').html(output);
+            console.log(output)
           });
         });
     })
@@ -88,7 +77,6 @@ function getMovie(){
             <object class="thumbnail" data="${image}" type="image/png"></object>
           </div>
           <div class="col-md-8">
-            <h2>${movie.Title}</h2>
             <ul class="list-group">
               <li class="list-group-item"><strong>Genre:</strong> ${movie.Genre}</li>
               <li class="list-group-item"><strong>BoxOffice:</strong> ${movie.BoxOffice}</li>
@@ -107,6 +95,7 @@ function getMovie(){
         </div>
         <div class="row">
           <div class="well">
+            <h2>${movie.Title}</h2>
             <h3>Plot</h3>
             ${movie.Plot}
             <hr>
@@ -126,43 +115,52 @@ function getMovie(){
 function getWatchLater(){
   //unpack localStorage and get all the movies
   //loop though all the id's and return the values
-  let imdbIDS = JSON.parse(localStorage.getItem('watchLater'));
-  let output = '';
-  $.each(imdbIDS, (index, movie) => {
-        getMovieData(movie, function(data){
-            //The variable data holds more information about specific movie
-            //which is determined by imdbID
-            
-            let title = limitChars(data.Title, 20);
-            let image = hasImg(data.Poster, data.type);
-            let scoreLabel = getScoreLabel(data.imdbRating);
-            output += `
-              <div class="col-md-3">
-                <div class="well text-center">
-                  <div style="margin:5px;">
-                    <span class="label label-default lb-md">${data.Type}</span>
-                    <span class="label label-${scoreLabel} lb-md">${data.imdbRating}</span>
+  if(localStorage.getItem('watchLater')){
+    let imdbIDS = JSON.parse(localStorage.getItem('watchLater'));
+    let output = '';
+    $.each(imdbIDS, (index, movie) => {
+          getMovieData(movie, function(data){
+              //The variable data holds more information about specific movie
+              //which is determined by imdbID
+              
+              let title = limitChars(data.Title, 20);
+              let image = hasImg(data.Poster, data.type);
+              let scoreLabel = getScoreLabel(data.imdbRating);
+              output += `
+                <div class="col-md-3">
+                  <div class="well text-center">
+                    <div style="margin:5px;">
+                      <span class="label label-default lb-md">${data.Type}</span>
+                      <span class="label label-${scoreLabel} lb-md">${data.imdbRating}</span>
+                    </div>
+                    <object data="${image}" type="image/png"></object>
+                    <div>
+                      <h5>${title}</h5>
+                      <h6>${data.Year}</h6>
+                      <h6>${data.Director}</h6>
+                    </div>
+                    <a onclick="movieSelected('${data.imdbID}')" class="btn btn-primary btn-block" href="#">Details</a>
+                    <a onclick="deleteMovie('${data.imdbID}')" class="btn btn-danger btn-block" href="#"><i class="fa fa-trash" aria-hidden="true"></i></a>
                   </div>
-                  <object data="${image}" type="image/png"></object>
-                  <div>
-                    <h5>${title}</h5>
-                    <h6>${data.Year}</h6>
-                    <h6>${data.Director}</h6>
-                  </div>
-                  <a onclick="movieSelected('${data.imdbID}')" class="btn btn-primary btn-block" href="#">Details</a>
-                  <a onclick="deleteMovie('${data.imdbID}')" class="btn btn-danger btn-block" href="#"><i class="fa fa-trash" aria-hidden="true"></i></a>
-                </div>
-              </div>`;
-            
-            $('#watch').html(output);
-          });
-        });
+                </div>`;
+              
+              $('#watch').html(output);
+      });
+    }); 
+  }else{
+    output += "Nothing here...";
+    
+    $('#watch').html(output);
+  }
 }
 
 function getRandom(){
-  let rand = Math.floor((Math.random() * 1000000) + 1);
+  var number;
+  do {
+    number = Math.floor(Math.random() * 999);
+  } while (number < 100);
 
-  axios.get('https://www.omdbapi.com/?i='+'tt0045751&apikey=c4337100')
+  axios.get('https://www.omdbapi.com/?i='+'tt00'+number+'51&apikey=c4337100')
     .then((response) => {
       //console.log(response)
       let movie = response.data;
@@ -173,10 +171,9 @@ function getRandom(){
       let output =`
         <div class="row">
           <div class="col-md-4">
-            <object class="thumbnail" data="${image}" type="image/png"></object>
+            <object data="${image}" type="image/png"></object>
           </div>
           <div class="col-md-8">
-            <h2>${movie.Title}</h2>
             <ul class="list-group">
               <li class="list-group-item"><strong>Genre:</strong> ${movie.Genre}</li>
               <li class="list-group-item"><strong>BoxOffice:</strong> ${movie.BoxOffice}</li>
@@ -194,12 +191,15 @@ function getRandom(){
           </div>
         </div>
         <div class="row">
-          <div class="well">
-            <h3>Plot</h3>
-            ${movie.Plot}
-            <hr>
-            <a href="http://imdb.com/title/${movie.imdbID}" target="_blank" class="btn btn-primary">View IMDB</a>
-            <a href="https://www.traileraddict.com/search/${title}" target="_blank" class="btn btn-default">Find Trailer</a>
+          <div class="col-md-12">
+            <div class="well">
+              <h2>${movie.Title}</h2>
+              <h3>Plot</h3>
+              ${movie.Plot}
+              <hr>
+              <a href="http://imdb.com/title/${movie.imdbID}" target="_blank" class="btn btn-primary">View IMDB</a>
+              <a href="https://www.traileraddict.com/search/${title}" target="_blank" class="btn btn-default">Find Trailer</a>
+            </div>
           </div>
         </div>
       `;
